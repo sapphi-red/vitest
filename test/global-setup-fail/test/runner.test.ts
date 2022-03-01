@@ -28,5 +28,5 @@ it('should fail', async() => {
     caught = true
   }
 
-  expect(caught).toBe(false)
+  expect(caught).toBe(true)
 }, 80000)
