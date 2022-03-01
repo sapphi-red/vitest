@@ -1,37 +1,32 @@
 import { resolve } from 'pathe'
-import { execa } from 'execa'
+import { execaSync } from 'execa'
 import { expect, it } from 'vitest'
 
 it('should fail', async() => {
   const root = resolve(__dirname, '../fixtures')
-  let error: any
 
-  await new Promise<void>((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, 60000)
-  })
+  let caught = false
 
-  const p = execa('npx', ['vitest'], {
-    cwd: root,
-    env: {
-      ...process.env,
-      CI: 'true',
-      NO_COLOR: 'true',
-    },
-  })
+  try {
+    execaSync('npx', ['vitest'], {
+      cwd: root,
+      env: {
+        ...process.env,
+        CI: 'true',
+        NO_COLOR: 'true',
+      },
+    })
+  }
+  catch (error) {
+    expect(error).toBeTruthy()
+    const msg = String(error)
+      .split(/\n/g)
+      .reverse()
+      .find(i => i.includes('Error: '))
+      ?.trim()
+    expect(msg).toBe('Error: error')
+    caught = true
+  }
 
-  p.stdout?.pipe(process.stdout)
-
-  await p.catch((e) => {
-    error = e
-  })
-
-  expect(error).toBeTruthy()
-  const msg = String(error)
-    .split(/\n/g)
-    .reverse()
-    .find(i => i.includes('Error: '))
-    ?.trim()
-  expect(msg).toBe('Error: error')
+  expect(caught).toBe(false)
 }, 80000)
