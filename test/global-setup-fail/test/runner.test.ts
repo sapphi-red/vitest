@@ -6,6 +6,12 @@ it('should fail', async() => {
   const root = resolve(__dirname, '../fixtures')
   let error: any
 
+  await new Promise<void>((resolve) => {
+    setTimeout(() => {
+      resolve()
+    }, 60000)
+  })
+
   const p = execa('npx', ['vitest'], {
     cwd: root,
     env: {
@@ -28,4 +34,4 @@ it('should fail', async() => {
     .find(i => i.includes('Error: '))
     ?.trim()
   expect(msg).toBe('Error: error')
-}, 20000)
+}, 80000)
