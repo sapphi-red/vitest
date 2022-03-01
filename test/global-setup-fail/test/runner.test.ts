@@ -5,7 +5,8 @@ import { expect, it } from 'vitest'
 it('should fail', async() => {
   const root = resolve(__dirname, '../fixtures')
   let error: any
-  await execa('npx', ['vitest'], {
+
+  const p = execa('npx', ['vitest'], {
     cwd: root,
     env: {
       ...process.env,
@@ -13,9 +14,12 @@ it('should fail', async() => {
       NO_COLOR: 'true',
     },
   })
-    .catch((e) => {
-      error = e
-    })
+
+  p.stdout?.pipe(process.stdout)
+
+  await p.catch((e) => {
+    error = e
+  })
 
   expect(error).toBeTruthy()
   const msg = String(error)
