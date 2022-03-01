@@ -2,6 +2,7 @@ import { resolve } from 'pathe'
 import fg from 'fast-glob'
 import { execaSync } from 'execa'
 import { describe, expect, it } from 'vitest'
+import { normalizePath } from 'vite'
 
 describe('should fails', async() => {
   const root = resolve(__dirname, '../fixtures')
@@ -29,7 +30,7 @@ describe('should fails', async() => {
         .split(/\n/g)
         .reverse()
         .find(i => i.includes('Error: '))
-        ?.trim()
+        ?.trim().replace(normalizePath(root), '')
       expect(msg).toMatchSnapshot(file)
     }, 10000)
   }
