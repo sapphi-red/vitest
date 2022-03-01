@@ -5,9 +5,7 @@ import { expect, it } from 'vitest'
 it('should fail', async() => {
   const root = resolve(__dirname, '../fixtures')
 
-  let caught = false
-
-  try {
+  expect(() => {
     execaSync('npx', ['vitest'], {
       cwd: root,
       env: {
@@ -16,17 +14,5 @@ it('should fail', async() => {
         NO_COLOR: 'true',
       },
     })
-  }
-  catch (error) {
-    expect(error).toBeTruthy()
-    const msg = String(error)
-      .split(/\n/g)
-      .reverse()
-      .find(i => i.includes('Error: '))
-      ?.trim()
-    expect(msg).toBe('Error: error')
-    caught = true
-  }
-
-  expect(caught).toBe(true)
+  }).toThrowError('Error: error')
 }, 80000)

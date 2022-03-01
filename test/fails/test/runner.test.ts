@@ -1,6 +1,6 @@
 import { resolve } from 'pathe'
 import fg from 'fast-glob'
-import { execa } from 'execa'
+import { execaSync } from 'execa'
 import { describe, expect, it } from 'vitest'
 
 describe('should fails', async() => {
@@ -10,17 +10,19 @@ describe('should fails', async() => {
   for (const file of files) {
     it(file, async() => {
       let error: any
-      await execa('npx', ['vitest', 'run', file], {
-        cwd: root,
-        env: {
-          ...process.env,
-          CI: 'true',
-          NO_COLOR: 'true',
-        },
-      })
-        .catch((e) => {
-          error = e
+      try {
+        execaSync('npx', ['vitest', 'run', file], {
+          cwd: root,
+          env: {
+            ...process.env,
+            CI: 'true',
+            NO_COLOR: 'true',
+          },
         })
+      }
+      catch (e) {
+        error = e
+      }
 
       expect(error).toBeTruthy()
       const msg = String(error)
