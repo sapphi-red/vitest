@@ -42,5 +42,8 @@ jobs:
       - name: Build
         run: pnpm run build
 
+      - name: CPUs
+        run: node -e "console.log(require('os').cpus().length)"
+
       - name: Test
         run: pnpm run test:ci
