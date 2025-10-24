@@ -274,7 +274,7 @@ export async function VitestPlugin(
 
           // #415, in run mode we don't need the watcher, close it would improve the performance
           if (!options.watch) {
-            await server.watcher.close()
+            // await server.watcher.close()
           }
         },
       },

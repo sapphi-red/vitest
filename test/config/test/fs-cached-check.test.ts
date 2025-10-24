@@ -8,7 +8,19 @@ test('import a generated file', async () => {
   const root = path.resolve('fixtures/fs-cached-check')
   await fs.promises.rm(path.join(root, 'dist'), { recursive: true, force: true })
 
-  const { stderr, exitCode } = await runVitest({ root })
+  const { stderr, exitCode } = await runVitest({ root }, undefined, undefined, {
+    plugins: [
+      {
+        name: 'force-watcher',
+        configResolved(config) {
+          config.server.watch = {
+            usePolling: true,
+            interval: 100,
+          }
+        },
+      },
+    ],
+  })
   expect(stderr).toBe('')
   expect(exitCode).toBe(0)
 })
