@@ -1,0 +1,21 @@
+diff --git a/dist/index.js b/dist/index.js
+index 7b490b98e0fc6a32c9b1c9e2b076797e4742176d..f54c6a1a700eaef08fd02b02a371f836b65ca3a5 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -327,10 +327,13 @@ var Locator = class {
+ 		endNeedle.column -= 1;
+ 		let end = getPosition(endNeedle, this.#map);
+ 		if (end === null) {
+-			endNeedle.column++;
+-			end = getPosition(endNeedle, this.#map);
++			let line = endNeedle.line;
++			while (line >= 1 && end === null) {
++				end = getPosition({ line, column: Number.MAX_SAFE_INTEGER }, this.#map);
++				line--;
++			}
++			if (end === null) return null;
+ 		}
+-		if (end === null) return null;
+ 		const loc = {
+ 			start,
+ 			end
